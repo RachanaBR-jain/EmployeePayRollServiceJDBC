@@ -121,5 +121,22 @@ public class EmployeeWageMain {
         return employeePayrollList;
     }
 
+    public long readTotalSalary(String gender) throws EmployeeWageException {
+        String sql = "select gender,sum(salary) from employee_payroll group by gender;";
+        int totalSalary = 0;
+        try (Connection connection = this.getConnection()) {
+            PreparedStatement prepareStatement = connection.prepareStatement(sql);
+            ResultSet result = prepareStatement.executeQuery();
+            while (result.next()) {
+                if (result.getString(1).equalsIgnoreCase(gender))
+                    totalSalary = result.getInt(2);
+            }
+        } catch (SQLException e) {
+            throw new EmployeeWageException(e.getMessage(),
+                    EmployeeWageException.ExceptionType.EMPLOYEEPAYROLL_DB_PROBLEM);
+        }
+        return totalSalary;
+    }
+
 
 }

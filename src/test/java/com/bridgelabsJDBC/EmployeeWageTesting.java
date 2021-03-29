@@ -58,6 +58,18 @@ public class EmployeeWageTesting {
         System.out.println(employeeWage.readDataByDate("2018-01-01"));
         Assertions.assertEquals(3, employeePayrollDataList.size());
     }
+
+    @Test
+    public void givenEmployeePayrollDB_usingPreparedStatement_findSumOfSal_groupByGender() throws EmployeeWageException {
+        employeePayrollDataList = employeeWage.retrieveAllData();
+        long sumOfSal_male = employeeWage.readTotalSalary("M");
+        System.out.println(employeeWage.readTotalSalary("M"));
+
+        Assertions.assertEquals(40500000, sumOfSal_male);
+        long sumOfSal_female = employeeWage.readTotalSalary("F");
+        System.out.println(employeeWage.readTotalSalary("F"));
+        Assertions.assertEquals(300000000, sumOfSal_female);
+    }
 }
 
 
