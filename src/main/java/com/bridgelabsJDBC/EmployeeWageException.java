@@ -1,7 +1,7 @@
 package com.bridgelabsJDBC;
 public class EmployeeWageException extends Exception {
     public enum ExceptionType {
-        WRONG_CREDENTIALS, CANNOT_LOAD_DRIVER
+        EMPLOYEEPAYROLL_DB_PROBLEM,UNABLE_TO_UPDATE
     }
     ExceptionType type;
 

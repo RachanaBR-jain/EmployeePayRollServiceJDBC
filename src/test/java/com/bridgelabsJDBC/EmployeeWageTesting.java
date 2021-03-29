@@ -19,7 +19,7 @@ public class EmployeeWageTesting {
     }
 
     @Test
-    public void givenEmployeePayrollDB_WhenRetrieved_ShouldMatchEmployeeCount() {
+    public void givenEmployeePayrollDB_WhenRetrieved_ShouldMatchEmployeeCount() throws EmployeeWageException {
         employeePayrollDataList = employeeWage.retrieveAllData();
         System.out.println(employeePayrollDataList.get(0));
         System.out.println(employeePayrollDataList.get(1));
@@ -28,9 +28,16 @@ public class EmployeeWageTesting {
     }
 
     @Test
-    public void givenEmployeePayrollDB_WhenUpdated_ShouldMatchEmployeeCount() {
+    public void givenEmployeePayrollDB_WhenUpdated_ShouldMatchEmployeeCount() throws EmployeeWageException {
         employeePayrollDataList = employeeWage.retrieveAllData();
-        int res = employeeWage.updateEmployeeDataUsingStatement();
+        int res = employeeWage.updateEmployeeDataUsingStatement("Terisa",300000000.0);
+        System.out.println("After update " + employeePayrollDataList.get(1));
+        Assertions.assertEquals(1, res);
+    }
+    @Test
+    public void givenEmployeePayrollDB_WhenUpdated_usingPreparedStatement_ShouldMatchEmployeeCount() throws EmployeeWageException {
+        employeePayrollDataList = employeeWage.retrieveAllData();
+        int res = employeeWage.updateEmployeeDataUsingPreparedStatement("Terisa",300000000.0);
         System.out.println("After update " + employeePayrollDataList.get(1));
         Assertions.assertEquals(1, res);
     }
