@@ -47,7 +47,7 @@ public class EmployeeWageMain {
             employeePayrollList = this.getEmployeePayrollData(result);
 
         } catch (SQLException e) {
-            throw new EmployeeWageException(e.getMessage(),EmployeeWageException.ExceptionType.EMPLOYEEPAYROLL_DB_PROBLEM);
+            throw new EmployeeWageException(e.getMessage(), EmployeeWageException.ExceptionType.EMPLOYEEPAYROLL_DB_PROBLEM);
         }
         return employeePayrollList;
     }
@@ -62,22 +62,8 @@ public class EmployeeWageMain {
             Statement statement = connection.createStatement();
             return statement.executeUpdate(sql);
         } catch (SQLException e) {
-            throw new EmployeeWageException(e.getMessage(),EmployeeWageException.ExceptionType.UNABLE_TO_UPDATE);
+            throw new EmployeeWageException(e.getMessage(), EmployeeWageException.ExceptionType.UNABLE_TO_UPDATE);
         }
-    }
-
-    public List<EmployeePayrollData> getEmployeePayrollData(String name) throws EmployeeWageException {
-        List<EmployeePayrollData> employeePayrollList = null;
-        if (this.employeePayrollDataStatement == null)
-            this.prepareStatementForEmployeeData();
-        try {
-            employeePayrollDataStatement.setString(1, name);
-            ResultSet result = employeePayrollDataStatement.executeQuery();
-            employeePayrollList = this.getEmployeePayrollData(result);
-        } catch (SQLException e) {
-            throw new EmployeeWageException(e.getMessage(),EmployeeWageException.ExceptionType.UNABLE_TO_UPDATE);
-        }
-        return employeePayrollList;
     }
 
     private List<EmployeePayrollData> getEmployeePayrollData(ResultSet result) throws EmployeeWageException {
@@ -91,7 +77,7 @@ public class EmployeeWageMain {
                 employeePayrollList.add(new EmployeePayrollData(id, name, salary, start));
             }
         } catch (SQLException e) {
-            throw new EmployeeWageException(e.getMessage(),EmployeeWageException.ExceptionType.EMPLOYEEPAYROLL_DB_PROBLEM);
+            throw new EmployeeWageException(e.getMessage(), EmployeeWageException.ExceptionType.EMPLOYEEPAYROLL_DB_PROBLEM);
         }
 
         return employeePayrollList;
@@ -103,8 +89,22 @@ public class EmployeeWageMain {
             String sql = "SELECT * FROM employee_payroll WHERE name=? ";
             employeePayrollDataStatement = connection.prepareStatement(sql);
         } catch (SQLException e) {
-            throw new EmployeeWageException(e.getMessage(),EmployeeWageException.ExceptionType.EMPLOYEEPAYROLL_DB_PROBLEM);
+            throw new EmployeeWageException(e.getMessage(), EmployeeWageException.ExceptionType.EMPLOYEEPAYROLL_DB_PROBLEM);
         }
     }
+    public List<EmployeePayrollData> getEmployeePayrollData(String name) throws EmployeeWageException {
+        List<EmployeePayrollData> employeePayrollList = null;
+        if (this.employeePayrollDataStatement == null)
+            this.prepareStatementForEmployeeData();
+        try {
+            employeePayrollDataStatement.setString(1, name);
+            ResultSet result = employeePayrollDataStatement.executeQuery();
+            employeePayrollList = this.getEmployeePayrollData(result);
+        } catch (SQLException e) {
+            throw new EmployeeWageException(e.getMessage(), EmployeeWageException.ExceptionType.UNABLE_TO_UPDATE);
+        }
+        return employeePayrollList;
+    }
+
 
 }
