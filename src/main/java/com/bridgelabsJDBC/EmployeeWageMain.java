@@ -92,6 +92,7 @@ public class EmployeeWageMain {
             throw new EmployeeWageException(e.getMessage(), EmployeeWageException.ExceptionType.EMPLOYEEPAYROLL_DB_PROBLEM);
         }
     }
+
     public List<EmployeePayrollData> getEmployeePayrollData(String name) throws EmployeeWageException {
         List<EmployeePayrollData> employeePayrollList = null;
         if (this.employeePayrollDataStatement == null)
@@ -102,6 +103,20 @@ public class EmployeeWageMain {
             employeePayrollList = this.getEmployeePayrollData(result);
         } catch (SQLException e) {
             throw new EmployeeWageException(e.getMessage(), EmployeeWageException.ExceptionType.UNABLE_TO_UPDATE);
+        }
+        return employeePayrollList;
+    }
+
+    public List<EmployeePayrollData> readDataByDate(String startDate) throws EmployeeWageException {
+        String sql = "select * from employee_payroll where start between cast(? as date) and date(now());";
+        List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
+        try (Connection connection = this.getConnection()) {
+            PreparedStatement prepareStatement = connection.prepareStatement(sql);
+            prepareStatement.setString(1, startDate);
+            ResultSet result = prepareStatement.executeQuery();
+            employeePayrollList = this.getEmployeePayrollData(result);
+        } catch (SQLException e) {
+            throw new EmployeeWageException(e.getMessage(), EmployeeWageException.ExceptionType.EMPLOYEEPAYROLL_DB_PROBLEM);
         }
         return employeePayrollList;
     }

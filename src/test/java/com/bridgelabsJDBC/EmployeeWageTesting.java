@@ -51,6 +51,13 @@ public class EmployeeWageTesting {
         System.out.println(employeeWage.getEmployeePayrollData("Charlie"));
         Assertions.assertEquals(3, employeePayrollDataList.size());
     }
+
+    @Test
+    public void givenEmployeePayrollDB_usingPreparedStatement_retrievePayrollData_usingStartDate() throws EmployeeWageException {
+        employeePayrollDataList = employeeWage.retrieveAllData();
+        System.out.println(employeeWage.readDataByDate("2018-01-01"));
+        Assertions.assertEquals(3, employeePayrollDataList.size());
+    }
 }
 
 

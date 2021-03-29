@@ -55,8 +55,7 @@ public class EmployeePayrollData {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", salary=" + salary +
-                ", startDate=" + startDate +
-                '}';
+                ", startDate=" + startDate + " \n ";
     }
 }
 
