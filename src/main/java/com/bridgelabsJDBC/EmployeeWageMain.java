@@ -8,38 +8,28 @@ import java.util.List;
 
 public class EmployeeWageMain {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/employeewagejdbc";
+    private static final String URL = "jdbc:mysql://localhost:3306/employeewagejdbc?useSSL=false";
     private static final String user = "root";
     private static final String password = "beerleke";
 
-    private Connection establishConnection() throws EmployeeWageException {
-        Connection connection;
+    private Connection establishConnection() {
+        Connection connection = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             System.out.println("Driver found!");
         } catch (ClassNotFoundException e) {
-            throw new EmployeeWageException("Cannot find the JDBC Driver!!", EmployeeWageException.ExceptionType.CANNOT_LOAD_DRIVER);
+            e.printStackTrace();
         }
         listDrivers();
         try {
-            System.out.println("Connecting to database: " + URL);
+            System.out.println("\nConnecting to database: " + URL);
             connection = DriverManager.getConnection(URL, user, password);
             System.out.println("Connection established with: " + connection);
         } catch (SQLException e) {
-            throw new EmployeeWageException("Cannot connect to the JDBC Driver!!",
-                    EmployeeWageException.ExceptionType.WRONG_CREDENTIALS);
+            e.printStackTrace();
         }
         return connection;
     }
-
-    private void listDrivers() {
-        Enumeration<Driver> driverList = DriverManager.getDrivers();
-        while (driverList.hasMoreElements()) {
-            Driver driverClass = driverList.nextElement();
-            System.out.println("Driver: " + driverClass.getClass().getName());
-        }
-    }
-
 
     public List<EmployeePayrollData> retrieveAllData() {
         String sql = "SELECT * FROM employee_payroll;";
@@ -54,17 +44,28 @@ public class EmployeeWageMain {
                 LocalDate startDate = resultSet.getDate("start").toLocalDate();
                 employeePayrollData.add(new EmployeePayrollData(id, name, salary, startDate));
             }
-        } catch (SQLException | EmployeeWageException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return employeePayrollData;
     }
 
-    public static void main(String[] args) throws EmployeeWageException {
-        EmployeeWageMain employeePayroll = new EmployeeWageMain();
-        employeePayroll.establishConnection();
-        employeePayroll.retrieveAllData();
+    int updateEmployeeDataUsingStatement() {
+        String sql = String.format("update employee_payroll set salary = %.2f where name = '%s';", 30000000.0, "Terisa");
+        try (Connection connection = this.establishConnection()) {
+            Statement statement = connection.createStatement();
+            return statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
+    private void listDrivers() {
+        Enumeration<Driver> driverList = DriverManager.getDrivers();
+        while (driverList.hasMoreElements()) {
+            Driver driverClass = driverList.nextElement();
+            System.out.println("Driver: " + driverClass.getClass().getName());
+        }
     }
 }
-
-
